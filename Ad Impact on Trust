@@ -1,0 +1,104 @@
+import React from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+
+const TikTokDriversChart = () => {
+  const data = [
+    { input: 'mrskelly_Ad_Recognition', avgIncrease: 5.91, outcomes: 203 },
+    { input: 'bodad_Ad_Recognition', avgIncrease: 5.05, outcomes: 150 },
+    { input: 'morgann_Ad_Recognition', avgIncrease: 3.96, outcomes: 196 }
+  ];
+
+  const colors = ['#00F2EA', '#FF0050', '#FE2C55'];
+
+  return (
+    <div className="w-full h-full p-8 bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            Strongest Input Influences on Outcome Variables
+          </h1>
+          <p className="text-gray-600">
+            Average probability increase across all significant outcome variables
+          </p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <ResponsiveContainer width="100%" height={400}>
+            <BarChart
+              data={data}
+              margin={{ top: 20, right: 30, left: 20, bottom: 100 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+              <XAxis 
+                dataKey="input" 
+                angle={-45}
+                textAnchor="end"
+                height={120}
+                tick={{ fill: '#374151', fontSize: 12 }}
+              />
+              <YAxis 
+                label={{ value: 'Average Probability Increase (%)', angle: -90, position: 'insideLeft' }}
+                tick={{ fill: '#374151' }}
+              />
+              <Tooltip 
+                formatter={(value, name) => {
+                  if (name === 'avgIncrease') return [`${value.toFixed(2)}%`, 'Avg Increase'];
+                  return [value, 'Outcomes Influenced'];
+                }}
+                contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', border: '1px solid #ccc' }}
+              />
+              <Legend 
+                wrapperStyle={{ paddingTop: '20px' }}
+                formatter={(value) => {
+                  if (value === 'avgIncrease') return 'Average Probability Increase (%)';
+                  return 'Number of Outcomes Influenced';
+                }}
+              />
+              <Bar dataKey="avgIncrease" name="avgIncrease" radius={[8, 8, 0, 0]}>
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={colors[index]} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {data.map((item, idx) => (
+            <div key={idx} className="bg-white rounded-lg shadow p-6 border-l-4" style={{ borderLeftColor: colors[idx] }}>
+              <h3 className="font-bold text-gray-800 mb-2 text-sm">
+                {item.input.replace('_', ' ')}
+              </h3>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-2xl font-bold" style={{ color: colors[idx] }}>
+                    {item.avgIncrease.toFixed(2)}%
+                  </p>
+                  <p className="text-xs text-gray-500">Average Increase</p>
+                </div>
+                <div>
+                  <p className="text-lg font-semibold text-gray-700">
+                    {item.outcomes}
+                  </p>
+                  <p className="text-xs text-gray-500">Outcomes Influenced</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 bg-blue-50 border-l-4 border-blue-500 p-6 rounded">
+          <h3 className="font-bold text-blue-900 mb-2">Key Findings</h3>
+          <ul className="space-y-2 text-sm text-blue-800">
+            <li><strong>mrskelly_Ad_Recognition</strong> has the strongest influence, driving an average 5.91% probability increase across 203 outcome variables</li>
+            <li><strong>bodad_Ad_Recognition</strong> ranks second with 5.05% average increase across 150 outcomes</li>
+            <li><strong>morgann_Ad_Recognition</strong> shows 3.96% average increase across 196 outcomes</li>
+            <li>All three ad recognition inputs show statistically significant effects across multiple outcome measures including Trust, Privacy, Safety, and Usefulness</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TikTokDriversChart;
